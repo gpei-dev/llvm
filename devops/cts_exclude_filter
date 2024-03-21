@@ -1,5 +1,4 @@
 # These two take too much time
-kernel_bundle
 marray
 # https://github.com/intel/llvm/issues/12926
 h_item

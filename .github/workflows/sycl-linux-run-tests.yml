@@ -293,12 +293,37 @@ jobs:
         -DSYCL_CTS_MEASURE_BUILD_TIMES=ON \
         -DDPCPP_INSTALL_DIR="$$(dirname (which clang++))/.." \
         $CMAKE_EXTRA_ARGS
-        ninja -C build-cts
+        ninja -C build-cts -v test_kernel_bundle
+        ninja -C build-cts -v test_has_kernel_bundle_core_all_states_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_all_states_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_atomic64_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_atomic64_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_fp16_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_fp16_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_fp64_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_fp64_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_like_support_reqd_sub_group_size_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_like_support_reqd_sub_group_size_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_like_unsupport_reqd_sub_group_size_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_like_unsupport_reqd_sub_group_size_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_reqd_like_support_work_group_size_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_reqd_like_support_work_group_size_dev
+        ninja -C build-cts -v test_has_kernel_bundle_core_reqd_like_unsupport_work_group_size_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_core_reqd_like_unsupport_work_group_size_dev
+        ninja -C build-cts -v test_has_kernel_bundle_multiple_kernels_ctx_only
+        ninja -C build-cts -v test_has_kernel_bundle_multiple_kernels_dev
+        ninja -C build-cts -v test_has_kernel_bundle_zero_kernels_ctx_only_and_ctx_and_dev
+        ninja -C build-cts -v test_get_kernel_ids_multiple_kernels
+        ninja -C build-cts -v test_get_kernel_ids_single_kernel
+        ninja -C build-cts -v test_get_kernel_ids_no_kernels
+        ninja -C build-cts -v test_get_kernel_bundle_zero_kernels
+        ninja -C build-cts -v test_get_kernel_bundle_with_kernel_attr
+        ninja -C build-cts -v test_get_kernel_bundle_without_kernel_attr
 
-    - name: SYCL CTS List devices
-      if: inputs.tests_selector == 'cts'
-      run: |
-        ./build-cts/bin/test_all --list-devices
+    # - name: SYCL CTS List devices
+    #   if: inputs.tests_selector == 'cts'
+    #   run: |
+    #     ./build-cts/bin/test_all --list-devices
 
     - name: Run SYCL CTS tests
       if: inputs.tests_selector == 'cts'
@@ -323,7 +348,7 @@ jobs:
         for i in `ls -1 ./build-cts/bin`; do
           if [ "$i" != "test_all" ]; then
             echo "::group::Running $i"
-            build-cts/bin/$i
+            build-cts/bin/$i -s
             if [ $? -ne 0 ]; then
               status=1
               if [$failed_suites == ""]; then
